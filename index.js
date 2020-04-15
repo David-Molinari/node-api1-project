@@ -52,11 +52,18 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 server.delete('/api/users/:id', (req, res) => {
-    const id = req.params.id
+    const id = req.params.id;
+    const user = users.find((user) => user.id == id)
 
-    res.status(200).json({message: `Deleted the user with id: ${id}`}
-    )
+    if (!user) {
+        res.status(404).json({ message: 'User does not exist' });
+    } else {
+        users = users.filter(u => u.id != user.id)
+        res.status(200).json(user);
+    }
 });
+
+// how do I delete this user
 
 server.put('/api/users/:id', (req, res) => {
     const user = users.find(u => u.id == req.params.id);
@@ -65,11 +72,10 @@ server.put('/api/users/:id', (req, res) => {
       res.status(404).json({ message: 'User does not exist' });
     } else {
       Object.assign(user, req.body);
-  
       res.status(200).json(user);
     }
   });
 
 
-const port = 5000;
+const port = 5005;
 server.listen(port, () => console.log(`\n== api on ${port} ==\n`))
