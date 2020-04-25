@@ -9,7 +9,7 @@ let users = [
     {
         name: 'John Doe',
         bio: 'random things',
-        id: shortid.generate()
+        id: '1'
     }
 ]
 
@@ -57,22 +57,24 @@ server.delete('/api/users/:id', (req, res) => {
 
     if (!user) {
         res.status(404).json({ message: 'User does not exist' });
-    } else {
+    } else if (user) {
         users = users.filter(u => u.id != user.id)
-        res.status(200).json(user);
+        res.status(200).json({message: `User: ${id} deleted`});
+    } else {
+        res.status(500).json({message: "The user information could not be retrieved."})
     }
 });
-
-// how do I delete this user
 
 server.put('/api/users/:id', (req, res) => {
     const user = users.find(u => u.id == req.params.id);
   
     if (!user) {
       res.status(404).json({ message: 'User does not exist' });
-    } else {
+    } else if (user) {
       Object.assign(user, req.body);
       res.status(200).json(user);
+    } else {
+        res.status(500).json({message: "The user information could not be modified."})
     }
   });
 
